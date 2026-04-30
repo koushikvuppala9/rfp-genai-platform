@@ -19,6 +19,7 @@ class Opportunity(Base):
 
     posted_date = Column(DateTime, nullable=True)
     due_date = Column(DateTime, nullable=True)
+    due_date_raw = Column(String(100), nullable=True)
 
     source_url = Column(Text, nullable=True)
     attachments_url = Column(Text, nullable=True)

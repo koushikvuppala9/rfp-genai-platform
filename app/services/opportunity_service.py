@@ -11,6 +11,7 @@ def build_row_hash(item):
         item["title"],
         item.get("agency") or "",
         item.get("status") or "",
+        str(item.get("due_date_raw") or ""),
         item.get("source_url") or "",
         item.get("attachments_url") or "",
     ])
@@ -37,10 +38,13 @@ def upsert_opportunity(db, item):
             existing.title = item["title"]
             existing.agency = item.get("agency")
             existing.status = item.get("status")
+            existing.due_date = item.get("due_date")
+            existing.due_date_raw = item.get("due_date_raw")
             existing.source_url = item.get("source_url")
             existing.attachments_url = item.get("attachments_url")
             existing.row_hash = new_hash
             existing.last_changed_at = now
+
             return existing, "updated"
 
         return existing, "unchanged"
@@ -51,6 +55,8 @@ def upsert_opportunity(db, item):
         title=item["title"],
         agency=item.get("agency"),
         status=item.get("status"),
+        due_date=item.get("due_date"),
+        due_date_raw=item.get("due_date_raw"),
         source_url=item.get("source_url"),
         attachments_url=item.get("attachments_url"),
         row_hash=new_hash,
@@ -60,4 +66,5 @@ def upsert_opportunity(db, item):
     )
 
     db.add(opportunity)
+
     return opportunity, "created"

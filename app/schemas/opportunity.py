@@ -9,6 +9,7 @@ class OpportunityCreate(BaseModel):
     title: str
     agency: str | None = None
     status: str | None = None
+    due_date_raw: str | None = None
     source_url: str | None = None
     attachments_url: str | None = None
 
@@ -22,6 +23,7 @@ class OpportunityResponse(BaseModel):
     status: str | None = None
     posted_date: datetime | None = None
     due_date: datetime | None = None
+    due_date_raw: str | None = None
     source_url: str | None = None
     attachments_url: str | None = None
     first_seen_at: datetime
@@ -37,6 +39,7 @@ class OpportunityUpsertResponse(BaseModel):
     id: int
     action: str
     message: str
+
 
 class OpportunityListResponse(BaseModel):
     page: int
