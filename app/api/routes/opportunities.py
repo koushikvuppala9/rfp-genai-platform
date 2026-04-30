@@ -1,6 +1,7 @@
 from datetime import date, datetime, time
 
 from fastapi import APIRouter, Depends
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from app.core.db_postgres import get_db
@@ -22,6 +23,7 @@ def list_opportunities(
     keyword: str | None = None,
     new_since: date | None = None,
     changed_since: date | None = None,
+    only_open: bool = False,
     page: int = 1,
     size: int = 20,
     sort: str = "id_desc",
@@ -55,6 +57,16 @@ def list_opportunities(
     if changed_since:
         start_dt = datetime.combine(changed_since, time.min)
         query = query.filter(Opportunity.last_changed_at >= start_dt)
+
+    if only_open:
+        now = datetime.utcnow()
+        query = query.filter(
+            Opportunity.status.ilike("Accepting Bids"),
+            or_(
+                Opportunity.due_date.is_(None),
+                Opportunity.due_date >= now,
+            ),
+        )
 
     total = query.count()
 
