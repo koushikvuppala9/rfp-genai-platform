@@ -13,6 +13,7 @@ from app.schemas.opportunity import (
     OpportunityUpsertResponse,
 )
 from app.services.opportunity_service import upsert_opportunity
+from app.services.relevance_service import calculate_relevance_score
 
 router = APIRouter(prefix="/opportunities", tags=["opportunities"])
 
@@ -91,11 +92,33 @@ def list_opportunities(
     offset = (page - 1) * size
     items = query.offset(offset).limit(size).all()
 
+    # ---- THIS IS THE IMPORTANT PART ----
+    response_items = []
+
+    for item in items:
+        response_items.append({
+            "id": item.id,
+            "portal": item.portal,
+            "source_posting_id": item.source_posting_id,
+            "title": item.title,
+            "agency": item.agency,
+            "status": item.status,
+            "posted_date": item.posted_date,
+            "due_date": item.due_date,
+            "due_date_raw": item.due_date_raw,
+            "source_url": item.source_url,
+            "attachments_url": item.attachments_url,
+            "first_seen_at": item.first_seen_at,
+            "last_seen_at": item.last_seen_at,
+            "last_changed_at": item.last_changed_at,
+            "relevance_score": calculate_relevance_score(item.title),
+        })
+
     return {
         "page": page,
         "size": size,
         "total": total,
-        "items": items,
+        "items": response_items,
     }
 
 

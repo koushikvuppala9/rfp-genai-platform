@@ -29,6 +29,7 @@ class OpportunityResponse(BaseModel):
     first_seen_at: datetime
     last_seen_at: datetime
     last_changed_at: datetime
+    relevance_score: int = 0
 
     model_config = {
         "from_attributes": True

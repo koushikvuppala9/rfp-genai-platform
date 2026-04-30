@@ -11,12 +11,10 @@ BDM_KEYWORDS = [
     "artificial intelligence",
     "api integration",
     "systems integration",
-
     # Medium signals (important for real matches)
     "software",
     "technology",
     "application",
-    "system",
     "erp",
     "hcm",
     "data",
