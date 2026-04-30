@@ -6,6 +6,15 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  APP_NAME: RFP GenAI
+  ENV: test
+  LOG_LEVEL: INFO
+  POSTGRES_DSN: postgresql://postgres:postgres@localhost:5432/rfp_db
+  MONGO_URI: mongodb://localhost:27017
+  MONGO_DB_NAME: rfp_genai_test
+  REDIS_URL: redis://localhost:6379/0
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,7 +24,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
