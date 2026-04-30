@@ -86,9 +86,10 @@ def list_opportunities(
         query = query.order_by(Opportunity.last_seen_at.desc())
     elif sort == "last_changed_desc":
         query = query.order_by(Opportunity.last_changed_at.desc())
+    elif sort == "relevance_desc":
+        query = query.order_by(Opportunity.id.desc())
     else:
         query = query.order_by(Opportunity.id.desc())
-
     offset = (page - 1) * size
     items = query.offset(offset).limit(size).all()
 
@@ -113,6 +114,13 @@ def list_opportunities(
             "last_changed_at": item.last_changed_at,
             "relevance_score": calculate_relevance_score(item.title),
         })
+
+    if sort == "relevance_desc":
+        response_items.sort(
+            key=lambda x: x["relevance_score"],
+            reverse=True,
+        )
+
 
     return {
         "page": page,
