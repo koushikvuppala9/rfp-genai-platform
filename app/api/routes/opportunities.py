@@ -1,3 +1,5 @@
+from datetime import date, datetime, time
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -8,7 +10,6 @@ from app.schemas.opportunity import (
     OpportunityListResponse,
     OpportunityUpsertResponse,
 )
-
 from app.services.opportunity_service import upsert_opportunity
 
 router = APIRouter(prefix="/opportunities", tags=["opportunities"])
@@ -19,6 +20,8 @@ def list_opportunities(
     portal: str | None = None,
     status: str | None = None,
     keyword: str | None = None,
+    new_since: date | None = None,
+    changed_since: date | None = None,
     page: int = 1,
     size: int = 20,
     sort: str = "id_desc",
@@ -45,6 +48,14 @@ def list_opportunities(
         search_term = f"%{keyword}%"
         query = query.filter(Opportunity.title.ilike(search_term))
 
+    if new_since:
+        start_dt = datetime.combine(new_since, time.min)
+        query = query.filter(Opportunity.first_seen_at >= start_dt)
+
+    if changed_since:
+        start_dt = datetime.combine(changed_since, time.min)
+        query = query.filter(Opportunity.last_changed_at >= start_dt)
+
     total = query.count()
 
     if sort == "id_asc":
@@ -57,7 +68,6 @@ def list_opportunities(
         query = query.order_by(Opportunity.id.desc())
 
     offset = (page - 1) * size
-
     items = query.offset(offset).limit(size).all()
 
     return {
@@ -66,6 +76,7 @@ def list_opportunities(
         "total": total,
         "items": items,
     }
+
 
 @router.post("", response_model=OpportunityUpsertResponse)
 def create_or_update_opportunity(
