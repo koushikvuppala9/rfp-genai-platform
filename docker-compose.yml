@@ -1,0 +1,23 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: rfp_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: rfp_db
+    ports:
+      - "5432:5432"
+
+  mongo:
+    image: mongo:6
+    container_name: rfp_mongo
+    ports:
+      - "27017:27017"
+
+  redis:
+    image: redis:7
+    container_name: rfp_redis
+    ports:
+      - "6379:6379"
+
