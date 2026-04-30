@@ -130,6 +130,95 @@ def list_opportunities(
     }
 
 
+@router.get("/daily-inbox", response_model=OpportunityListResponse)
+def daily_rfp_inbox(
+    portal: str | None = None,
+    inbox_date: date | None = None,
+    page: int = 1,
+    size: int = 20,
+    db: Session = Depends(get_db),
+):
+    if page < 1:
+        page = 1
+
+    if size < 1:
+        size = 20
+
+    if size > 100:
+        size = 100
+
+    target_date = inbox_date or date.today()
+    start_dt = datetime.combine(target_date, time.min)
+
+    query = db.query(Opportunity)
+
+    if portal:
+        query = query.filter(Opportunity.portal == portal)
+
+    query = query.filter(
+        Opportunity.status.ilike("Accepting Bids"),
+        or_(
+            Opportunity.due_date.is_(None),
+            Opportunity.due_date >= datetime.utcnow(),
+        ),
+        or_(
+            Opportunity.first_seen_at >= start_dt,
+            Opportunity.last_changed_at >= start_dt,
+        ),
+    )
+
+    relevance_filters = [
+        Opportunity.title.ilike(f"%{word}%")
+        for word in BDM_KEYWORDS
+    ]
+    query = query.filter(or_(*relevance_filters))
+
+    total = query.count()
+
+    items = (
+        query.order_by(Opportunity.last_changed_at.desc())
+        .offset((page - 1) * size)
+        .limit(size)
+        .all()
+    )
+
+    response_items = []
+
+    for item in items:
+        response_items.append({
+            "id": item.id,
+            "portal": item.portal,
+            "source_posting_id": item.source_posting_id,
+            "title": item.title,
+            "agency": item.agency,
+            "status": item.status,
+            "posted_date": item.posted_date,
+            "due_date": item.due_date,
+            "due_date_raw": item.due_date_raw,
+            "source_url": item.source_url,
+            "attachments_url": item.attachments_url,
+            "first_seen_at": item.first_seen_at,
+            "last_seen_at": item.last_seen_at,
+            "last_changed_at": item.last_changed_at,
+            "relevance_score": calculate_relevance_score(item.title),
+        })
+
+    response_items.sort(
+        key=lambda x: (
+            x["relevance_score"],
+            x["last_changed_at"],
+        ),
+        reverse=True,
+    )
+
+    return {
+        "page": page,
+        "size": size,
+        "total": total,
+        "items": response_items,
+    }
+
+
 @router.post("", response_model=OpportunityUpsertResponse)
 def create_or_update_opportunity(
     payload: OpportunityCreate,
