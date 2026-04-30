@@ -5,21 +5,34 @@ from app.core.db_postgres import get_db
 from app.models.opportunity import Opportunity
 from app.schemas.opportunity import (
     OpportunityCreate,
-    OpportunityResponse,
+    OpportunityListResponse,
     OpportunityUpsertResponse,
 )
+
 from app.services.opportunity_service import upsert_opportunity
 
 router = APIRouter(prefix="/opportunities", tags=["opportunities"])
 
 
-@router.get("", response_model=list[OpportunityResponse])
+@router.get("", response_model=OpportunityListResponse)
 def list_opportunities(
     portal: str | None = None,
     status: str | None = None,
     keyword: str | None = None,
+    page: int = 1,
+    size: int = 20,
+    sort: str = "id_desc",
     db: Session = Depends(get_db),
 ):
+    if page < 1:
+        page = 1
+
+    if size < 1:
+        size = 20
+
+    if size > 100:
+        size = 100
+
     query = db.query(Opportunity)
 
     if portal:
@@ -32,12 +45,27 @@ def list_opportunities(
         search_term = f"%{keyword}%"
         query = query.filter(Opportunity.title.ilike(search_term))
 
-    return (
-        query.order_by(Opportunity.id.desc())
-        .limit(100)
-        .all()
-    )
+    total = query.count()
 
+    if sort == "id_asc":
+        query = query.order_by(Opportunity.id.asc())
+    elif sort == "last_seen_desc":
+        query = query.order_by(Opportunity.last_seen_at.desc())
+    elif sort == "last_changed_desc":
+        query = query.order_by(Opportunity.last_changed_at.desc())
+    else:
+        query = query.order_by(Opportunity.id.desc())
+
+    offset = (page - 1) * size
+
+    items = query.offset(offset).limit(size).all()
+
+    return {
+        "page": page,
+        "size": size,
+        "total": total,
+        "items": items,
+    }
 
 @router.post("", response_model=OpportunityUpsertResponse)
 def create_or_update_opportunity(

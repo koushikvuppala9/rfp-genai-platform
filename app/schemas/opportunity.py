@@ -37,3 +37,9 @@ class OpportunityUpsertResponse(BaseModel):
     id: int
     action: str
     message: str
+
+class OpportunityListResponse(BaseModel):
+    page: int
+    size: int
+    total: int
+    items: list[OpportunityResponse]
