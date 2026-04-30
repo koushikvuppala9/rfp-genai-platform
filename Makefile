@@ -17,5 +17,7 @@ health:
 test-score: 
 	$(VENV) && python -c "from app.services.relevance_service import calculate_relevance_score; print(calculate_relevance_score('ERP and HCM System Replacement'))"
 
+email:
+	$(VENV) && python -m app.ingestion.send_daily_email
 
-	
+
