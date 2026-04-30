@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
+from app.config.relevance_keywords import BDM_KEYWORDS
 from app.core.db_postgres import get_db
 from app.models.opportunity import Opportunity
 from app.schemas.opportunity import (
@@ -24,6 +25,7 @@ def list_opportunities(
     new_since: date | None = None,
     changed_since: date | None = None,
     only_open: bool = False,
+    relevant_only: bool = False,
     page: int = 1,
     size: int = 20,
     sort: str = "id_desc",
@@ -49,6 +51,13 @@ def list_opportunities(
     if keyword:
         search_term = f"%{keyword}%"
         query = query.filter(Opportunity.title.ilike(search_term))
+
+    if relevant_only:
+        relevance_filters = [
+            Opportunity.title.ilike(f"%{word}%")
+            for word in BDM_KEYWORDS
+        ]
+        query = query.filter(or_(*relevance_filters))
 
     if new_since:
         start_dt = datetime.combine(new_since, time.min)
