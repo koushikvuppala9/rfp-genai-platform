@@ -3,6 +3,7 @@ from app.core.db_postgres import engine
 
 # import models so SQLAlchemy knows them
 from app.models.opportunity import Opportunity  # noqa
+from app.models.auth import AuthAuditEvent, Permission, Role, User  # noqa
 
 
 def init_db():
