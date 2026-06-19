@@ -1,0 +1,522 @@
+"use client";
+
+import AppShell from "@/components/layout/AppShell";
+import { useState } from "react";
+
+const governanceKpis = [
+  ["Opportunities Evaluated", "42", "text-slate-900"],
+  ["AI Qualified", "19", "text-slate-900"],
+  ["BDM Rejected", "23", "text-slate-900"],
+  ["Proposal Ready", "8", "text-slate-900"],
+  ["Submitted", "3", "text-slate-900"],
+  ["Awarded", "1", "text-slate-900"],
+];
+
+const qualificationDistribution = [
+  ["Strong Match", "19", "bg-emerald-600", "45%"],
+  ["Medium Match", "12", "bg-amber-500", "29%"],
+  ["Low Match", "11", "bg-red-500", "26%"],
+];
+
+const complianceSummary = [
+  ["Requirements Extracted", "417"],
+  ["Requirements Mapped", "401"],
+  ["Partial Matches", "12"],
+  ["Exceptions", "4"],
+];
+
+const auditRows = [
+  [
+    "IT Modernization and Cloud Migration Services",
+    "R-14",
+    "Approve With Conditions",
+    "Jun 17, 2026 02:06 AM",
+    "Koushik Vuppala",
+  ],
+  [
+    "ERP Support and Application Managed Services",
+    "R-09",
+    "Send To BDM Review",
+    "Jun 17, 2026 01:54 AM",
+    "System",
+  ],
+  [
+    "Cybersecurity Assessment Services",
+    "R-22",
+    "Reject - Capability Gap",
+    "Jun 17, 2026 01:41 AM",
+    "System",
+  ],
+  [
+    "Cloud Hosting and Migration Support",
+    "R-14",
+    "Approve With Conditions",
+    "Jun 17, 2026 01:28 AM",
+    "Business Team",
+  ],
+];
+
+export default function ReportsGovernancePage() {
+  const [showAuditDrawer, setShowAuditDrawer] = useState(false);
+  const [showEvidenceModal, setShowEvidenceModal] = useState(false);
+  const [selectedEvidence, setSelectedEvidence] = useState({
+    title: "PWS §3.2",
+    document: "Solicitation.pdf",
+    page: 18,
+    confidence: "94%",
+    text: "The contractor shall migrate all legacy workloads to AWS GovCloud infrastructure and maintain compliance with applicable federal security requirements throughout the transition period.",
+    highlight: "AWS GovCloud",
+  });
+  return (
+    <AppShell>
+      <div className="space-y-6">
+        <div>
+          <p className="text-sm text-slate-500">
+            Reports & Governance / AI Decision Audit
+          </p>
+
+          <h1 className="text-4xl font-bold text-slate-900 mt-2">
+            Reports & Governance
+          </h1>
+
+          <p className="text-slate-600 mt-2">
+            Operational visibility into qualification outcomes, compliance
+            coverage, decision audits, and proposal lifecycle metrics.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+          {governanceKpis.map(([label, value, color]) => (
+            <div
+              key={label}
+              className="bg-white rounded-xl border p-5 shadow-sm"
+            >
+              <p className="text-sm text-slate-500">{label}</p>
+              <p className={`text-3xl font-bold mt-2 ${color}`}>{value}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div className="bg-white rounded-xl border p-6 shadow-sm">
+            <h2 className="text-xl font-semibold text-slate-900 mb-5">
+              Qualification Distribution
+            </h2>
+
+            <div className="space-y-6">
+              {qualificationDistribution.map(
+                ([label, value, color, percent]) => (
+                  <div key={label}>
+                    <div className="flex justify-between items-start mb-3">
+                      <span className="text-slate-700 font-medium">
+                        {label}
+                      </span>
+
+                      <div className="text-right">
+                        <div className="font-semibold text-slate-900">
+                          {value} Opportunities
+                        </div>
+
+                        <div className="text-xs text-slate-500 mt-1">
+                          {percent} of evaluated opportunities
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="h-2 rounded-full bg-slate-100">
+                      <div
+                        className={`h-2 rounded-full ${color}`}
+                        style={{ width: percent }}
+                      />
+                    </div>
+                  </div>
+                )
+              )}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl border p-6 shadow-sm">
+            <h2 className="text-xl font-semibold text-slate-900 mb-5">
+              Compliance Audit Summary
+            </h2>
+
+            <div className="space-y-4">
+              {complianceSummary.map(([label, value]) => (
+                <div key={label} className="flex justify-between border-b pb-3">
+                  <span className="text-slate-600">{label}</span>
+                  <span className="text-xl font-bold text-slate-900">
+                    {value}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-5 bg-slate-50 border border-slate-200 rounded-xl p-4">
+              <p className="text-xs text-slate-500">Compliance Coverage</p>
+              <p className="text-2xl font-bold text-slate-900 mt-1">96.1%</p>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl border p-6 shadow-sm">
+            <h2 className="text-xl font-semibold text-slate-900 mb-5">
+              AI Governance Controls
+            </h2>
+
+            <div className="space-y-4 text-sm">
+              <div className="flex justify-between border-b pb-3">
+                <span className="text-slate-600">Rule version</span>
+                <span className="font-semibold text-slate-900">
+                  RFP-Ruleset 2.4
+                </span>
+              </div>
+
+              <div className="flex justify-between border-b pb-3">
+                <span className="text-slate-600">Human review required</span>
+                <span className="font-semibold text-slate-900">Enabled</span>
+              </div>
+
+              <div className="flex justify-between border-b pb-3">
+                <span className="text-slate-600">Decision logging</span>
+                <span className="font-semibold text-slate-900">100%</span>
+              </div>
+
+              <div className="flex justify-between border-b pb-3">
+                <span className="text-slate-600">Explainability records</span>
+                <span className="font-semibold text-slate-900">Available</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="text-slate-600">Open exceptions</span>
+                <span className="font-semibold text-red-600">4</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl border p-6 shadow-sm">
+          <h2 className="text-xl font-semibold text-slate-900 mb-5">
+            AI Decision Audit Log
+          </h2>
+
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 text-left">
+              <tr>
+                <th className="p-3 text-slate-600">Opportunity</th>
+                <th className="p-3 text-slate-600">Rule Triggered</th>
+                <th className="p-3 text-slate-600">Decision</th>
+                <th className="p-3 text-slate-600">Timestamp</th>
+                <th className="p-3 text-slate-600">Reviewer</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {auditRows.map(
+                ([opportunity, rule, decision, timestamp, reviewer]) => (
+                  <tr
+                    key={`${opportunity}-${timestamp}`}
+                    className="border-t hover:bg-slate-50"
+                  >
+                    <td className="p-3 text-slate-900 font-medium">
+                      {opportunity}
+                    </td>
+                    <td className="p-3">
+                      <button
+                        onClick={() => setShowAuditDrawer(true)}
+                        className="text-blue-700 font-semibold hover:underline"
+                      >
+                        {rule}
+                      </button>
+                    </td>
+                    <td className="p-3">
+                      <button
+                        onClick={() => setShowAuditDrawer(true)}
+                        className="text-slate-700 hover:text-blue-700 hover:underline"
+                      >
+                        {decision}
+                      </button>
+                    </td>
+                    <td className="p-3 text-slate-600">{timestamp}</td>
+                    <td className="p-3 text-slate-700">{reviewer}</td>
+                  </tr>
+                )
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {showEvidenceModal && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-900/40 p-6">
+          <div className="w-full max-w-3xl rounded-2xl bg-white shadow-2xl border">
+            <div className="flex items-center justify-between border-b p-6">
+              <div>
+                <p className="text-sm text-slate-500">Source Evidence</p>
+                <h2 className="text-2xl font-bold text-slate-900 mt-1">
+                  {selectedEvidence.title}
+                </h2>
+              </div>
+
+              <button
+                onClick={() => setShowEvidenceModal(false)}
+                className="text-xl text-slate-500 hover:text-slate-900"
+              >
+                x
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              <div>
+                <p className="text-xs uppercase text-slate-500 mb-2">
+                  Document
+                </p>
+                <div className="rounded-xl border bg-slate-50 p-4 font-medium text-slate-900">
+                  {selectedEvidence.document}
+                </div>
+              </div>
+
+              <div>
+                <p className="text-xs uppercase text-slate-500 mb-2">
+                  Extracted Text
+                </p>
+
+                <div className="rounded-xl border bg-slate-50 p-5 leading-8 text-slate-700">
+                  {selectedEvidence.text}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4">
+                <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-4">
+                  <p className="text-xs text-emerald-700">Confidence</p>
+                  <p className="text-3xl font-bold text-emerald-800 mt-1">
+                    {selectedEvidence.confidence}
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-blue-100 bg-blue-50 p-4">
+                  <p className="text-xs text-blue-700">Extraction Source</p>
+                  <p className="font-semibold text-blue-800 mt-2">AI Parsed</p>
+                </div>
+
+                <div className="rounded-xl border bg-slate-50 p-4">
+                  <p className="text-xs text-slate-500">Document Page</p>
+                  <p className="font-semibold text-slate-900 mt-2">
+                    Page {selectedEvidence.page}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showAuditDrawer && (
+        <div className="fixed inset-0 z-50 flex justify-end bg-slate-900/30">
+          <div className="h-full w-[520px] bg-white shadow-2xl p-6 overflow-y-auto">
+            <div className="flex items-start justify-between border-b pb-4">
+              <div>
+                <p className="text-sm text-slate-500">AI Decision Audit</p>
+                <h2 className="text-2xl font-bold text-slate-900 mt-1">
+                  Decision Detail
+                </h2>
+              </div>
+
+              <button
+                onClick={() => setShowAuditDrawer(false)}
+                className="text-slate-500 hover:text-slate-900 text-xl"
+              >
+                x
+              </button>
+            </div>
+
+            <div className="space-y-5 mt-6">
+              <div>
+                <p className="text-xs text-slate-500 uppercase">Opportunity</p>
+                <p className="font-semibold text-slate-900 mt-1">
+                  IT Modernization and Cloud Migration Services
+                </p>
+              </div>
+
+              <div>
+                <p className="text-xs text-slate-500 uppercase">Decision</p>
+                <p className="font-semibold text-blue-700 mt-1">
+                  Approve With Conditions
+                </p>
+              </div>
+
+              <div>
+                <p className="text-xs text-slate-500 uppercase">
+                  Rule Triggered
+                </p>
+                <p className="font-semibold text-slate-900 mt-1">R-14</p>
+              </div>
+
+              <div className="bg-slate-50 border rounded-xl p-4">
+                <p className="text-xs text-slate-500 uppercase mb-3">
+                  Rule Description
+                </p>
+
+                <div className="space-y-2 text-sm text-slate-700">
+                  <p>Condition: Strong Match &gt; 85%</p>
+                  <p>Condition: Compliance Coverage &gt; 90%</p>
+                  <p>Condition: No Critical Eligibility Failures</p>
+                  <p>Result: Approve With Conditions</p>
+                </div>
+              </div>
+
+              <div>
+                <p className="text-xs text-slate-500 uppercase mb-3">
+                  Evidence Used
+                </p>
+
+                <div className="space-y-3 text-sm">
+                  <div className="flex gap-3 border-b pb-3">
+                    <span className="text-emerald-700 font-bold">✓</span>
+                    <div>
+                      <p className="font-semibold text-slate-900">
+                        AWS GovCloud found
+                      </p>
+
+                      <button
+                        onClick={() => {
+                          setSelectedEvidence({
+                            title: "PWS §3.2",
+                            document: "Solicitation.pdf",
+                            page: 18,
+                            confidence: "94%",
+                            text: "The contractor shall migrate all legacy workloads to AWS GovCloud infrastructure and maintain compliance with applicable federal security requirements throughout the transition period.",
+                            highlight: "AWS GovCloud",
+                          });
+                          setShowEvidenceModal(true);
+                        }}
+                        className="text-blue-700 hover:underline"
+                      >
+                        PWS §3.2
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 border-b pb-3">
+                    <span className="text-emerald-700 font-bold">✓</span>
+                    <div>
+                      <p className="font-semibold text-slate-900">
+                        FedRAMP found
+                      </p>
+
+                      <button
+                        onClick={() => {
+                          setSelectedEvidence({
+                            title: "PWS §5.1",
+                            document: "Solicitation.pdf",
+                            page: 27,
+                            confidence: "88%",
+                            text: "Contractor personnel shall maintain FedRAMP Moderate compliance and implement all required federal security controls throughout contract execution.",
+                            highlight: "FedRAMP",
+                          });
+                          setShowEvidenceModal(true);
+                        }}
+                        className="text-blue-700 hover:underline"
+                      >
+                        PWS §5.1
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 border-b pb-3">
+                    <span className="text-emerald-700 font-bold">✓</span>
+                    <div>
+                      <p className="font-semibold text-slate-900">
+                        Small Business set-aside
+                      </p>
+
+                      <button
+                        onClick={() => {
+                          setSelectedEvidence({
+                            title: "Section L",
+                            document: "Solicitation.pdf",
+                            page: 54,
+                            confidence: "96%",
+                            text: "This procurement is designated as a Small Business set-aside and is restricted to eligible Small Business entities under NAICS 541512.",
+                            highlight: "Small Business set-aside",
+                          });
+                          setShowEvidenceModal(true);
+                        }}
+                        className="text-blue-700 hover:underline"
+                      >
+                        Section L
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 border-b pb-3">
+                    <span className="text-amber-600 font-bold">!</span>
+                    <div>
+                      <p className="font-semibold text-slate-900">
+                        Subcontracting gap
+                      </p>
+
+                      <button
+                        onClick={() => {
+                          setSelectedEvidence({
+                            title: "Section L.7",
+                            document: "Solicitation.pdf",
+                            page: 63,
+                            confidence: "92%",
+                            text: "Offerors shall submit a subcontracting participation plan demonstrating at least 25% Small Disadvantaged Business involvement.",
+                            highlight: "25% Small Disadvantaged Business",
+                          });
+                          setShowEvidenceModal(true);
+                        }}
+                        className="text-blue-700 hover:underline"
+                      >
+                        Section L.7
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4">
+                  <p className="text-xs text-emerald-700">AI Confidence</p>
+                  <p className="text-3xl font-bold text-emerald-800 mt-1">
+                    87%
+                  </p>
+                </div>
+
+                <div className="bg-blue-50 border border-blue-100 rounded-xl p-4">
+                  <p className="text-xs text-blue-700">Review Status</p>
+                  <p className="text-lg font-bold text-blue-800 mt-2">
+                    Human Review Required
+                  </p>
+                </div>
+              </div>
+
+              <div className="border-t pt-4 text-sm">
+                <div className="flex justify-between py-2">
+                  <span className="text-slate-500">Reviewer</span>
+                  <span className="font-medium text-slate-900">
+                    Koushik Vuppala
+                  </span>
+                </div>
+
+                <div className="flex justify-between py-2">
+                  <span className="text-slate-500">Timestamp</span>
+                  <span className="font-medium text-slate-900">
+                    Jun 17, 2026 02:06 AM
+                  </span>
+                </div>
+
+                <div className="flex justify-between py-2">
+                  <span className="text-slate-500">Audit Record ID</span>
+                  <span className="font-medium text-slate-900">
+                    AUD-2026-0617-014
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </AppShell>
+  );
+}

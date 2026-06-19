@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f4f5f7;
+  --foreground: #1a2332;
+
+  --rfp-navy: #1a2332;
+  --rfp-bg: #f4f5f7;
+  --rfp-card: #ffffff;
+  --rfp-border: #e1e4e8;
+  --rfp-text: #1a2332;
+  --rfp-muted: #6b7280;
+  --rfp-body: #374151;
+
+  --rfp-success: #16a34a;
+  --rfp-warning: #d97706;
+  --rfp-critical: #dc2626;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--rfp-bg);
+}
+
+body {
+  margin: 0;
+  background: var(--rfp-bg);
+  color: var(--rfp-text);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.rfp-card {
+  background: var(--rfp-card);
+  border: 1px solid var(--rfp-border);
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(26, 35, 50, 0.06);
+}
+
+.rfp-label {
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--rfp-muted);
+}
+
+.rfp-body-text {
+  font-size: 13px;
+  color: var(--rfp-body);
+}
+
+.rfp-kpi-value {
+  font-size: 28px;
+  line-height: 34px;
+  font-weight: 600;
+  color: var(--rfp-text);
+}
+
+.rfp-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.rfp-status-ok {
+  background: var(--rfp-success);
+}
+
+.rfp-status-warning {
+  background: var(--rfp-warning);
+}
+
+.rfp-status-critical {
+  background: var(--rfp-critical);
+}

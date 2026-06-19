@@ -1,0 +1,158 @@
+import AppShell from "@/components/layout/AppShell";
+
+export default function ReportsGovernancePage() {
+  return (
+    <AppShell>
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-4xl font-bold text-slate-900">
+            Reports & Governance
+          </h1>
+          <p className="text-slate-600 mt-2">
+            Compliance tracking, workflow visibility, and executive reporting for the RFP lifecycle.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-4 gap-4">
+          <div className="bg-white rounded-xl border p-5 shadow-sm">
+            <p className="text-sm text-slate-500">Compliance Readiness</p>
+            <p className="text-3xl font-bold text-emerald-700 mt-2">94%</p>
+          </div>
+
+          <div className="bg-white rounded-xl border p-5 shadow-sm">
+            <p className="text-sm text-slate-500">Active Pursuits</p>
+            <p className="text-3xl font-bold text-blue-700 mt-2">8</p>
+          </div>
+
+          <div className="bg-white rounded-xl border p-5 shadow-sm">
+            <p className="text-sm text-slate-500">Pending Reviews</p>
+            <p className="text-3xl font-bold text-amber-600 mt-2">3</p>
+          </div>
+
+          <div className="bg-white rounded-xl border p-5 shadow-sm">
+            <p className="text-sm text-slate-500">Audit Events</p>
+            <p className="text-3xl font-bold text-slate-900 mt-2">286</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-6">
+          <div className="bg-white rounded-xl border p-6 shadow-sm col-span-2">
+            <h2 className="text-xl font-semibold text-slate-900 mb-5">
+              RFP Lifecycle Governance
+            </h2>
+
+            <div className="space-y-4">
+              {[
+                ["Opportunity Collected", "42", "Complete"],
+                ["AI Qualification Completed", "19", "Complete"],
+                ["BDM Review", "8", "In Review"],
+                ["Proposal Draft Generated", "6", "In Progress"],
+                ["Compliance Matrix Completed", "5", "Ready"],
+                ["Executive Approval", "3", "Pending"],
+              ].map(([stage, count, status]) => (
+                <div key={stage} className="flex items-center justify-between border-b pb-3">
+                  <div>
+                    <p className="font-medium text-slate-900">{stage}</p>
+                    <p className="text-xs text-slate-500 mt-1">
+                      Workflow stage tracked by governance engine
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-6">
+                    <span className="text-2xl font-bold text-slate-900">
+                      {count}
+                    </span>
+                    <span className="text-xs px-3 py-1 rounded-full bg-blue-50 text-blue-700">
+                      {status}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl border p-6 shadow-sm">
+            <h2 className="text-xl font-semibold text-slate-900 mb-5">
+              Governance Controls
+            </h2>
+
+            <div className="space-y-4 text-sm">
+              <div className="flex justify-between">
+                <span className="text-slate-600">Role-based access</span>
+                <span className="font-semibold text-emerald-700">Enabled</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="text-slate-600">Audit logging</span>
+                <span className="font-semibold text-emerald-700">Enabled</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="text-slate-600">Human review</span>
+                <span className="font-semibold text-emerald-700">Required</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="text-slate-600">Source traceability</span>
+                <span className="font-semibold text-emerald-700">Active</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="text-slate-600">Proposal approvals</span>
+                <span className="font-semibold text-amber-600">In Queue</span>
+              </div>
+
+              <div className="pt-4 border-t">
+                <p className="text-xs text-slate-500">
+                  Governance Recommendation
+                </p>
+                <p className="text-lg font-bold text-blue-700 mt-1">
+                  5 packages ready for compliance review
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl border p-6 shadow-sm">
+          <h2 className="text-xl font-semibold text-slate-900 mb-5">
+            Audit Trail Snapshot
+          </h2>
+
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 text-left">
+              <tr>
+                <th className="p-3">Timestamp</th>
+                <th className="p-3">Module</th>
+                <th className="p-3">Event</th>
+                <th className="p-3">Actor</th>
+                <th className="p-3">Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {[
+                ["Jun 17, 2026 01:36 AM", "AI Qualification", "Match score generated", "System", "Completed"],
+                ["Jun 17, 2026 01:31 AM", "Proposal Workspace", "Technical response drafted", "System", "Completed"],
+                ["Jun 17, 2026 01:24 AM", "BDM Review", "Opportunity marked for pursuit", "Business Team", "Approved"],
+                ["Jun 17, 2026 01:18 AM", "Source Monitoring", "New opportunities processed", "Pipeline", "Completed"],
+              ].map(([time, module, event, actor, status]) => (
+                <tr key={time} className="border-t">
+                  <td className="p-3 text-slate-700">{time}</td>
+                  <td className="p-3 text-slate-700">{module}</td>
+                  <td className="p-3 text-slate-900">{event}</td>
+                  <td className="p-3 text-slate-700">{actor}</td>
+                  <td className="p-3">
+                    <span className="text-xs px-2 py-1 rounded bg-emerald-50 text-emerald-700">
+                      {status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </AppShell>
+  );
+}
